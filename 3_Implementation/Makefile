@@ -1,11 +1,25 @@
 #TargetName:Dependencies
 #<TAB>commands
 
-Build:M1_PB.c
-	gcc M1_PB.c -o M1_PB.out
+PROJ_NAME = PhoneBook
+SRC=main.c M1_PB.c
+ifdef OS
+   RM = del /q
+   FixPath = $(subst /,\,$1)
+   EXEC = exe
+else
+   ifeq ($(shell uname), Linux)
+      RM = rm -rf
+      FixPath = $1
+	  EXEC = out
+   endif
+endif
 
-Run:M1_PB.out
-	./M1_PB.out
+Build : $(SRC)  
+	gcc $(SRC) -o $(call FixPath,$(PROJ_NAME).$(EXEC)) -lm
+
+Run :Build	
+	./$(call FixPath,$(PROJ_NAME).$(EXEC))
 
 Clean:
-	rm -rf  *.o *.out *.i *.s
+	$(RM) $(call FixPath,*.out)
